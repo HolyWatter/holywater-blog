@@ -1,15 +1,16 @@
-import { PostingType } from "../../common/interface";
+import { PostingType } from '../../common/interface'
+import Markdown from '../Markdown/Markdow'
 
 interface Props {
-  posting: PostingType;
+  posting: PostingType
 }
 
 export default function Posting({ posting }: Props) {
-  const date = new Date(posting.created);
-  const timeFormat = new Intl.DateTimeFormat("KR", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(date);
+  const date = new Date(posting.created)
+  const timeFormat = new Intl.DateTimeFormat('KR', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date)
   return (
     <div className="my-5 w-[400px] rounded-md border">
       <div className="flex flex-col justify-center space-y-3 py-2 pl-3">
@@ -25,5 +26,5 @@ export default function Posting({ posting }: Props) {
         <p>{posting.text}</p>
       </div>
     </div>
-  );
+  )
 }
