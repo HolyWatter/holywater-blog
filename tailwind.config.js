@@ -4,8 +4,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        origin: "#",
+        origin: "#2F436E",
         bg: "#f1f5f9",
+        modalbg: "black/70"
       },
     },
   },

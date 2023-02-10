@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Main from "./pages/main/Main";
-import SignUp from "./pages/signup/SignUp";
-import Login from "./pages/login/Login";
+import Main from "./pages/Main/Main";
+import Nav from "./components/nav/Nav";
+import Develop from "./pages/Develop/Develop";
 
 function App() {
   return (
     <BrowserRouter>
-      <div className="bg-bg min-h-screen w-full">
+      <Nav />
+      <div className="min-h-screen w-full bg-bg py-16">
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/develop" element={<Develop />} />
         </Routes>
       </div>
     </BrowserRouter>
