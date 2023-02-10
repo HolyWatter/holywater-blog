@@ -1,5 +1,5 @@
 import Input from "./Input";
-import SignUpInfo from "../../common/interface";
+import { SignUpInfo } from "../../common/interface";
 
 interface Props {
   submitForm: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
