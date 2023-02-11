@@ -7,8 +7,8 @@ interface Props {
 }
 
 const ADDCOMMENT = gql`
-  mutation addComment($text: String!, $postingId: Int!) {
-    addComment(text: $text, postingId: $postingId) {
+  mutation addPostingComment($text: String!, $postingId: Int!) {
+    addPostingComment(text: $text, postingId: $postingId) {
       text
       id
     }
