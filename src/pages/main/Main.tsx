@@ -1,9 +1,9 @@
-import { gql, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Posting from "../../components/Main/Posting";
-import AddPost from "../../components/post/AddPost";
-import { PostingType } from "../../common/interface";
+import { gql, useQuery } from '@apollo/client'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import Posting from '../../components/Main/Posting'
+import AddPost from '../../components/post/AddPost'
+import { PostingType } from '../../common/interface'
 
 const GETPOSTING = gql`
   query AllPosting {
@@ -18,24 +18,31 @@ const GETPOSTING = gql`
         id
         nickname
       }
+      comments {
+        id
+        text
+        writer {
+          nickname
+        }
+      }
     }
   }
-`;
+`
 
 export default function Main() {
-  const [isPosting, setIsPosting] = useState<boolean>(false);
-  const [postingList, setPostingList] = useState<PostingType[]>([]);
+  const [isPosting, setIsPosting] = useState<boolean>(false)
+  const [postingList, setPostingList] = useState<PostingType[]>([])
 
   const clickAddPost = () => {
-    setIsPosting((prev) => !prev);
-  };
-  const { data } = useQuery(GETPOSTING);
+    setIsPosting((prev) => !prev)
+  }
+  const { data } = useQuery(GETPOSTING)
 
   useEffect(() => {
     if (data?.AllPosting) {
-      setPostingList(data?.AllPosting);
+      setPostingList(data?.AllPosting)
     }
-  }, [data]);
+  }, [data])
 
   return (
     <div className="">
@@ -66,5 +73,5 @@ export default function Main() {
       </button>
       {isPosting && <AddPost setIsPosting={setIsPosting} />}
     </div>
-  );
+  )
 }
