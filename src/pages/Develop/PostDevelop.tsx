@@ -86,8 +86,8 @@ export default function PostDevelop() {
   }
 
   return (
-    <div className="flex h-full py-10 px-20 md:space-x-7">
-      <div className="flex h-full flex-col space-y-3 md-m:w-full md:w-[50%]">
+    <div className="flex h-full py-10 px-10 md:space-x-7">
+      <div className="h-full  space-y-3 md-m:w-full md:w-[50%]">
         <input
           onChange={inputContents}
           className="border-b-4 border-origin bg-bg pl-3 pb-2 text-3xl focus:outline-none"
@@ -107,8 +107,8 @@ export default function PostDevelop() {
           onChange={inputContents}
           name="description"
           value={contents.description}
-          className="h-[100%] resize-none bg-bg pl-3 focus:outline-none"
           placeholder="오늘 공부한 내용을 적어보세요..."
+          className="min-h-[350px] w-full resize-none bg-bg pl-3 focus:outline-none"
         />
         <div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-between border-t bg-origin px-5">
           <Link

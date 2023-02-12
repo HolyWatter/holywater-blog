@@ -9,7 +9,7 @@ function App() {
   return (
     <BrowserRouter>
       <Nav />
-      <div className="h-screen min-h-screen w-full bg-bg py-16">
+      <div className="h-full min-h-screen bg-bg py-16">
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/develop" element={<Develop />} />

@@ -31,26 +31,20 @@ const GETPOSTING = gql`
 
 export default function Main() {
   const [isPosting, setIsPosting] = useState<boolean>(false)
-  const [postingList, setPostingList] = useState<PostingType[]>([])
 
   const clickAddPost = () => {
     setIsPosting((prev) => !prev)
   }
-  const { data } = useQuery(GETPOSTING)
-
-  useEffect(() => {
-    if (data?.AllPosting) {
-      setPostingList(data?.AllPosting)
-    }
-  }, [data])
+  const { data, loading, refetch } = useQuery(GETPOSTING)
 
   return (
     <div className="">
       <Link to="/develop">개발일지</Link>
       <div className="flex flex-col items-center">
-        {postingList.map((posting) => (
-          <Posting key={posting.id} posting={posting} />
-        ))}
+        {!loading &&
+          data.AllPosting.map((posting: PostingType) => (
+            <Posting key={posting.id} posting={posting} refetch={refetch} />
+          ))}
       </div>
       <button
         onClick={clickAddPost}
@@ -71,7 +65,7 @@ export default function Main() {
           />
         </svg>
       </button>
-      {isPosting && <AddPost setIsPosting={setIsPosting} />}
+      {isPosting && <AddPost setIsPosting={setIsPosting} refetch={refetch} />}
     </div>
   )
 }

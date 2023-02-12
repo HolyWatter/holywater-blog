@@ -1,9 +1,17 @@
-import { gql, useMutation } from '@apollo/client'
+import {
+  ApolloQueryResult,
+  gql,
+  OperationVariables,
+  useMutation,
+} from '@apollo/client'
 import { useState } from 'react'
 import { PostingType } from '../../common/interface'
 
 interface Props {
   posting: PostingType
+  refetch: (
+    variables?: Partial<OperationVariables> | undefined
+  ) => Promise<ApolloQueryResult<any>>
 }
 
 const ADDCOMMENT = gql`
@@ -15,7 +23,7 @@ const ADDCOMMENT = gql`
   }
 `
 
-export default function Posting({ posting }: Props) {
+export default function Posting({ posting, refetch }: Props) {
   const [comment, setComment] = useState('')
   const date = new Date(posting.created)
   const timeFormat = new Intl.DateTimeFormat('KR', {
@@ -25,7 +33,7 @@ export default function Posting({ posting }: Props) {
   const inputComment = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value)
   }
-  const [addComment, { data }] = useMutation(ADDCOMMENT, {
+  const [addComment] = useMutation(ADDCOMMENT, {
     context: {
       headers: {
         Authorization: localStorage.getItem('token'),
@@ -33,20 +41,20 @@ export default function Posting({ posting }: Props) {
     },
   })
 
-  const submitComment = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    addComment({
+    await addComment({
       variables: {
         text: comment,
         postingId: posting.id,
       },
     })
     setComment('')
-    console.log(data)
+    refetch()
   }
 
   return (
-    <div className="my-5 w-[400px] rounded-md border">
+    <div className="my-5 w-[40%] rounded-md border">
       <div className="flex flex-col justify-center space-y-3 py-2 pl-3">
         <p>{posting.author.nickname}</p>
         <p className="text-xs text-gray-500">{timeFormat}</p>

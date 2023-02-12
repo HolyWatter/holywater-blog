@@ -1,4 +1,9 @@
-import { useMutation, gql } from '@apollo/client'
+import {
+  useMutation,
+  gql,
+  ApolloQueryResult,
+  OperationVariables,
+} from '@apollo/client'
 import { useEffect, useState } from 'react'
 import TagForm from './TagForm'
 
@@ -12,11 +17,15 @@ const ADDPOST = gql`
     }
   }
 `
+
 interface Props {
   setIsPosting: React.Dispatch<React.SetStateAction<boolean>>
+  refetch: (
+    variables?: Partial<OperationVariables> | undefined
+  ) => Promise<ApolloQueryResult<any>>
 }
 
-export default function AddPost({ setIsPosting }: Props) {
+export default function AddPost({ setIsPosting, refetch }: Props) {
   const [contents, setContents] = useState({
     title: '',
     text: '',
@@ -40,16 +49,13 @@ export default function AddPost({ setIsPosting }: Props) {
       [name]: value,
     })
   }
-  useEffect(() => {
-    if (data?.addPosting) {
-      alert('게시글이 작성되었습니다.')
-      closeModal()
-    }
-  }, [data])
 
   const clickPost = async () => {
     if (contents.text !== '' && contents.title !== '') {
       addPosting({ variables: contents })
+      alert('게시글이 작성되었습니다.')
+      closeModal()
+      refetch()
     } else {
       alert('내용을 입력해주세요')
     }
@@ -94,13 +100,13 @@ export default function AddPost({ setIsPosting }: Props) {
           placeholder="제목을 입력하세요"
           className="border-b py-1 pl-2 focus:outline-none"
         />
-          <TagForm
-            deleteTag={deleteTag}
-            inputTag={inputTag}
-            tag={tag}
-            submitTagForm={submitTagForm}
-            tagList={tagList}
-          />
+        <TagForm
+          deleteTag={deleteTag}
+          inputTag={inputTag}
+          tag={tag}
+          submitTagForm={submitTagForm}
+          tagList={tagList}
+        />
         <textarea
           onChange={inputContents}
           name="text"
