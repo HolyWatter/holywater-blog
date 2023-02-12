@@ -1,6 +1,6 @@
 import { useMutation, gql } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import TagForm from './TagForm'
 
 const ADDPOST = gql`
   mutation addPosting($title: String!, $text: String!) {
@@ -94,40 +94,13 @@ export default function AddPost({ setIsPosting }: Props) {
           placeholder="제목을 입력하세요"
           className="border-b py-1 pl-2 focus:outline-none"
         />
-        <form className="" onSubmit={submitTagForm}>
-          <input
-            onChange={inputTag}
-            value={tag}
-            className="w-full border-b py-1 pl-2 focus:outline-none"
-            placeholder="태그를 입력하세요"
+          <TagForm
+            deleteTag={deleteTag}
+            inputTag={inputTag}
+            tag={tag}
+            submitTagForm={submitTagForm}
+            tagList={tagList}
           />
-        </form>
-        <div className="flex flex-wrap space-x-1">
-          {tagList.map((tag) => (
-            <div
-              key={tag}
-              className="mb-1 flex items-center space-x-2 rounded-full bg-origin py-1 px-3"
-            >
-              <p className="text-[8px] text-white">{tag}</p>
-              <button value={tag} onClick={deleteTag}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="h-3 w-3 text-white"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            </div>
-          ))}
-        </div>
         <textarea
           onChange={inputContents}
           name="text"
