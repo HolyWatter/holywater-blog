@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react'
 import TagForm from './TagForm'
 
 const ADDPOST = gql`
-  mutation addPosting($title: String!, $text: String!) {
-    addPosting(title: $title, text: $text) {
+  mutation addPosting($title: String!, $text: String!, $img: [Upload]) {
+    addPosting(title: $title, text: $text, img: $img) {
       id
       text
       title
@@ -30,6 +30,7 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
     title: '',
     text: '',
   })
+  const [img, setImg] = useState<any>([])
   const [tagList, setTagList] = useState<string[]>([])
   const [tag, setTag] = useState<string>('')
   const [addPosting, { data }] = useMutation(ADDPOST, {
@@ -39,7 +40,6 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
       },
     },
   })
-
   const inputContents = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -52,7 +52,13 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
 
   const clickPost = async () => {
     if (contents.text !== '' && contents.title !== '') {
-      addPosting({ variables: contents })
+      addPosting({
+        variables: {
+          title: contents.title,
+          text: contents.text,
+          img: img,
+        },
+      })
       alert('게시글이 작성되었습니다.')
       closeModal()
       refetch()
@@ -87,6 +93,19 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
     setTagList(tagList.filter((tag) => tag !== e.currentTarget.value))
   }
 
+  const selectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImg([])
+    const image = Object.values(e.target.files as any)
+    image.forEach((item: any) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(item)
+      reader.onloadend = (finishedEvent) => {
+        const { currentTarget } = finishedEvent
+        setImg([...img, (currentTarget as any).result])
+      }
+    })
+  }
+  console.log(img)
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 bg-black/50">
       <div className="absolute top-[40%] left-[50%] flex w-[50%] translate-x-[-50%] translate-y-[-50%]  flex-col space-y-3 rounded-md border bg-white py-7 px-5">
@@ -107,6 +126,7 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
           submitTagForm={submitTagForm}
           tagList={tagList}
         />
+        <input type="file" multiple={true} onChange={selectImg} />
         <textarea
           onChange={inputContents}
           name="text"

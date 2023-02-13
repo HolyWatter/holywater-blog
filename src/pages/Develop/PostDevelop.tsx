@@ -90,7 +90,7 @@ export default function PostDevelop() {
       <div className="h-full  space-y-3 md-m:w-full md:w-[50%]">
         <input
           onChange={inputContents}
-          className="border-b-4 border-origin bg-bg pl-3 pb-2 text-3xl focus:outline-none"
+          className="w-full border-b-4 border-origin bg-bg pl-3 pb-2 text-3xl focus:outline-none"
           placeholder="제목을 입력하세요"
           name="title"
           value={contents.title}

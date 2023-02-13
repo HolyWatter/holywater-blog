@@ -12,7 +12,10 @@ const GETPOSTING = gql`
       created
       title
       text
-      img
+      img{
+        id
+        location
+      }
       text
       author {
         id
@@ -39,7 +42,6 @@ export default function Main() {
 
   return (
     <div className="">
-      <Link to="/develop">개발일지</Link>
       <div className="flex flex-col items-center">
         {!loading &&
           data.AllPosting.map((posting: PostingType) => (
