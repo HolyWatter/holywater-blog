@@ -5,8 +5,13 @@ import DevelopTagForm from '../../components/Develop/DevelopTagForm'
 import { gql, useMutation } from '@apollo/client'
 
 const ADDMARKDOWN = gql`
-  mutation addMarkdown($title: String!, $text: String!) {
-    addMarkdown(title: $title, text: $text) {
+  mutation addMarkdown(
+    $title: String!
+    $text: String!
+    $tag: [String]
+    $img: [Upload]
+  ) {
+    addMarkdown(title: $title, text: $text, tag: $tag, img: $img) {
       id
       text
       title
@@ -23,6 +28,7 @@ export default function PostDevelop() {
     title: '',
     description: '',
   })
+  const [img, setImg] = useState<any>([])
   const [addMarkdown, { data }] = useMutation(ADDMARKDOWN, {
     context: {
       headers: {
@@ -81,8 +87,26 @@ export default function PostDevelop() {
       variables: {
         title: contents.title,
         text: contents.description,
+        tag: tagList,
+        img,
       },
     })
+  }
+
+  const selectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileArr = Object.values(e.target.files as any)
+    let file
+    let newArr: any = []
+    for (let i in fileArr) {
+      file = fileArr[i]
+      const reader = new FileReader()
+      reader.readAsDataURL(file as any)
+      reader.onloadend = (finishedEvent) => {
+        const { currentTarget } = finishedEvent
+        newArr[i] = (currentTarget as any).result
+        setImg([...newArr])
+      }
+    }
   }
 
   return (
@@ -102,6 +126,7 @@ export default function PostDevelop() {
           submitTagForm={submitTagForm}
           tagList={tagList}
         />
+        <input type="file" multiple={true} onChange={selectImg} />
         <textarea
           onKeyDown={pressTabKey}
           onChange={inputContents}

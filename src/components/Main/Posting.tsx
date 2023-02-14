@@ -59,13 +59,28 @@ export default function Posting({ posting, refetch }: Props) {
         <p>{posting.author.nickname}</p>
         <p className="text-xs text-gray-500">{timeFormat}</p>
       </div>
+      <div>
+        {posting.img?.map((item: { id: number; location: string }) => (
+          <img alt="" key={item.id} src={`${item.location}`} />
+        ))}
+      </div>
       <div className="border-b"></div>
       <div className="py-3 pl-3">
         <div className="flex items-center space-x-5">
-          <p>{posting.author.nickname}</p>
+          <p className="font-semibold">{posting.author.nickname}</p>
           <p className="text-[16px]">{posting.title}</p>
         </div>
         <p>{posting.text}</p>
+        <div className="flex flex-wrap space-x-2 pt-3 ">
+          {posting.tag?.map((tag) => (
+            <p
+              key={tag.id}
+              className="mb-1 rounded-full bg-origin px-3 py-1 text-xs text-white"
+            >
+              {tag.tag}
+            </p>
+          ))}
+        </div>
       </div>
       <div className="border-b" />
       <div className="flex flex-col py-3 pl-3">

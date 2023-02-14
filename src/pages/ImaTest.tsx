@@ -11,25 +11,31 @@ const UPLOADIMG = gql`
 
 export default function ImaTest() {
   const [img, setImg] = useState<any>()
-  const selectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const image = Object.values(e.target.files as any)
-    let arr: string[] = []
-    console.log(image)
-    image.map((item: any) => {
+  const [url, setUrl] = useState<any>()
+
+  const selectImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileArr = Object.values(e.target.files as any)
+    let file
+    let newArr: any = []
+    console.log(fileArr)
+    for (let i in fileArr) {
+      file = fileArr[i]
       const reader = new FileReader()
-      reader.readAsDataURL(item)
+      reader.readAsDataURL(file as any)
       reader.onloadend = (finishedEvent) => {
-        const { result } = finishedEvent.currentTarget as any
-        arr.push(result)
-        return arr
+      const { currentTarget } = finishedEvent
+        newArr[i] = (currentTarget as any).result
+        setImg([ ...newArr])
       }
-      return arr
-    })
-    console.log(arr)
+    }
+
   }
+
   console.log(img)
 
-  const [mutaionFn] = useMutation(UPLOADIMG)
+  const [mutaionFn] = useMutation(UPLOADIMG, {
+    context: { heaers: { 'keep-alive': 'true' } },
+  })
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     mutaionFn({

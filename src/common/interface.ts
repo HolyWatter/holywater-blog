@@ -13,8 +13,15 @@ export interface PostingType {
   created: string
   id: number
   title: string
+  tag: {
+    id: number
+    tag: string
+  }[]
   text: string
-  img: string[] | null
+  img: {
+    id: number
+    location: string
+  }[]
   comments: CommentType[]
 }
 

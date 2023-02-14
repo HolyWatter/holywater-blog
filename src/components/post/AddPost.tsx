@@ -4,16 +4,25 @@ import {
   ApolloQueryResult,
   OperationVariables,
 } from '@apollo/client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import TagForm from './TagForm'
 
 const ADDPOST = gql`
-  mutation addPosting($title: String!, $text: String!, $img: [Upload]) {
-    addPosting(title: $title, text: $text, img: $img) {
+  mutation addPosting(
+    $title: String!
+    $text: String!
+    $img: [Upload]
+    $tag: [String]
+  ) {
+    addPosting(title: $title, text: $text, img: $img, tag: $tag) {
       id
       text
       title
       user_id
+      tag {
+        id
+        tag
+      }
     }
   }
 `
@@ -56,7 +65,8 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
         variables: {
           title: contents.title,
           text: contents.text,
-          img: img,
+          tag: tagList,
+          img
         },
       })
       alert('게시글이 작성되었습니다.')
@@ -94,18 +104,21 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
   }
 
   const selectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImg([])
-    const image = Object.values(e.target.files as any)
-    image.forEach((item: any) => {
+    const fileArr = Object.values(e.target.files as any)
+    let file
+    let newArr: any = []
+    for (let i in fileArr) {
+      file = fileArr[i]
       const reader = new FileReader()
-      reader.readAsDataURL(item)
+      reader.readAsDataURL(file as any)
       reader.onloadend = (finishedEvent) => {
         const { currentTarget } = finishedEvent
-        setImg([...img, (currentTarget as any).result])
+        newArr[i] = (currentTarget as any).result
+        setImg([...newArr])
       }
-    })
+    }
   }
-  console.log(img)
+
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 bg-black/50">
       <div className="absolute top-[40%] left-[50%] flex w-[50%] translate-x-[-50%] translate-y-[-50%]  flex-col space-y-3 rounded-md border bg-white py-7 px-5">

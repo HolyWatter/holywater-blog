@@ -20,6 +20,10 @@ const DETAIL = gql`
           nickname
         }
       }
+      MarkdownTag{
+        id
+        tag
+      }
       author {
         id
         nickname

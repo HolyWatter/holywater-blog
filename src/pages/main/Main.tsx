@@ -17,6 +17,10 @@ const GETPOSTING = gql`
         location
       }
       text
+      tag{
+        id
+        tag
+      }
       author {
         id
         nickname
@@ -39,6 +43,8 @@ export default function Main() {
     setIsPosting((prev) => !prev)
   }
   const { data, loading, refetch } = useQuery(GETPOSTING)
+
+  console.log(data)
 
   return (
     <div className="">
