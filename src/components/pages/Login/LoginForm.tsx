@@ -1,4 +1,4 @@
-import Input from "./Input";
+import Input from "../../Input";
 
 interface Props {
   submitForm: (e: React.FormEvent<HTMLFormElement>) => void;

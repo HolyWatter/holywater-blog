@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import Markdown from '../../components/Markdown/Markdow'
-import DevelopTagForm from '../../components/Develop/DevelopTagForm'
 import { gql, useMutation } from '@apollo/client'
+import PostDevelopForm from '../../components/pages/Develop/PostDevelop/PostDevelopForm'
 
 const ADDMARKDOWN = gql`
   mutation addMarkdown(
@@ -17,16 +17,19 @@ const ADDMARKDOWN = gql`
       title
       created
       user_id
+      MarkdownImg {
+        id
+        location
+      }
     }
   }
 `
 
 export default function PostDevelop() {
-  const [tag, setTag] = useState<string>('')
   const [tagList, setTagList] = useState<string[]>([])
   const [contents, setContents] = useState({
     title: '',
-    description: '',
+    text: '',
   })
   const [img, setImg] = useState<any>([])
   const [addMarkdown, { data }] = useMutation(ADDMARKDOWN, {
@@ -36,104 +39,28 @@ export default function PostDevelop() {
       },
     },
   })
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (data?.addMarkdown) {
-      alert('게시글이 작성되었습니다.')
-      navigate(`/develop/${data.addMarkdown.id}`)
-    }
-  }, [data])
-  const inputContents = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setContents({
-      ...contents,
-      [name]: value,
-    })
-  }
-
-  const submitTagForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (tagList.includes(tag)) {
-      alert('이미 포함된 태그입니다.')
-      setTag('')
-    } else {
-      setTagList([...tagList, tag])
-      setTag('')
-    }
-  }
-
-  const inputTag = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTag(e.target.value)
-  }
-
-  const deleteTag = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setTagList(tagList.filter((tag) => tag !== e.currentTarget.value))
-  }
-
-  const pressTabKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      setContents({
-        ...contents,
-        description: contents.description + '\t',
-      })
-    }
-  }
 
   const submitPost = (e: React.MouseEvent<HTMLButtonElement>) => {
     addMarkdown({
       variables: {
         title: contents.title,
-        text: contents.description,
+        text: contents.text,
         tag: tagList,
         img,
       },
     })
   }
 
-  const selectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileArr = Object.values(e.target.files as any)
-    let file
-    let newArr: any = []
-    for (let i in fileArr) {
-      file = fileArr[i]
-      const reader = new FileReader()
-      reader.readAsDataURL(file as any)
-      reader.onloadend = (finishedEvent) => {
-        const { currentTarget } = finishedEvent
-        newArr[i] = (currentTarget as any).result
-        setImg([...newArr])
-      }
-    }
-  }
-
   return (
     <div className="flex h-full py-10 px-10 md:space-x-7">
       <div className="h-full  space-y-3 md-m:w-full md:w-[50%]">
-        <input
-          onChange={inputContents}
-          className="w-full border-b-4 border-origin bg-bg pl-3 pb-2 text-3xl focus:outline-none"
-          placeholder="제목을 입력하세요"
-          name="title"
-          value={contents.title}
-        />
-        <DevelopTagForm
-          deleteTag={deleteTag}
-          inputTag={inputTag}
-          tag={tag}
-          submitTagForm={submitTagForm}
+        <PostDevelopForm
+          contents={contents}
+          setContents={setContents}
+          setImg={setImg}
+          setTagList={setTagList}
           tagList={tagList}
-        />
-        <input type="file" multiple={true} onChange={selectImg} />
-        <textarea
-          onKeyDown={pressTabKey}
-          onChange={inputContents}
-          name="description"
-          value={contents.description}
-          placeholder="오늘 공부한 내용을 적어보세요..."
-          className="min-h-[350px] w-full resize-none bg-bg pl-3 focus:outline-none"
+          img={img}
         />
         <div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-between border-t bg-origin px-5">
           <Link
@@ -165,7 +92,7 @@ export default function PostDevelop() {
         </div>
       </div>
       <div className="w-[50%] break-words md-m:hidden">
-        <Markdown markdown={contents.description} />
+        <Markdown markdown={contents.text} />
       </div>
     </div>
   )

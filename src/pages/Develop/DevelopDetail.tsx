@@ -1,9 +1,10 @@
 import { useQuery, gql } from '@apollo/client'
 import { useParams } from 'react-router-dom'
-import DevelopCommentForm from '../../components/Develop/DevelopCommentForm'
 import Markdown from '../../components/Markdown/Markdow'
 import { CommentType } from '../../common/interface'
-import DevelopComment from '../../components/Develop/DevelopComment'
+import SwiperComponents from '../../components/SwiperComponent'
+import DevelopCommentForm from '../../components/pages/Develop/DevelopDetail/DevelopCommentForm'
+import DevelopComment from '../../components/pages/Develop/DevelopDetail/DevelopComment'
 
 const DETAIL = gql`
   query markdownDetail($id: Int!) {
@@ -20,9 +21,13 @@ const DETAIL = gql`
           nickname
         }
       }
-      MarkdownTag{
+      MarkdownTag {
         id
         tag
+      }
+      MarkdownImg {
+        id
+        location
       }
       author {
         id
@@ -38,7 +43,6 @@ export default function DevelopDetail() {
       id: parseInt(id!),
     },
   })
-  console.log(data)
 
   return (
     <div className="px-20 py-16 sm-m:px-3">
@@ -55,6 +59,11 @@ export default function DevelopDetail() {
                 timeStyle: 'short',
               }).format(new Date(data.markdownDetail.created))}
             </p>
+          </div>
+          <div className="z-0 px-5">
+            {data.markdownDetail.MarkdownImg && (
+              <SwiperComponents img={data.markdownDetail.MarkdownImg} />
+            )}
           </div>
           <div className="py-[20px]">
             <Markdown markdown={data.markdownDetail.text} />

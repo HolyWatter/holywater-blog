@@ -5,7 +5,8 @@ import {
   useMutation,
 } from '@apollo/client'
 import { useState } from 'react'
-import { PostingType } from '../../common/interface'
+import { PostingType } from '../../../common/interface'
+import SwiperComponents from '../../SwiperComponent'
 
 interface Props {
   posting: PostingType
@@ -54,16 +55,12 @@ export default function Posting({ posting, refetch }: Props) {
   }
 
   return (
-    <div className="my-5 w-[70%] rounded-md border">
+    <div className="my-5 w-[70%] max-w-[450px] rounded-md border">
       <div className="flex flex-col justify-center space-y-3 py-2 pl-3">
         <p>{posting.author.nickname}</p>
         <p className="text-xs text-gray-500">{timeFormat}</p>
       </div>
-      <div>
-        {posting.img?.map((item: { id: number; location: string }) => (
-          <img alt="" key={item.id} src={`${item.location}`} />
-        ))}
-      </div>
+      <div>{posting.img && <SwiperComponents img={posting.img} />}</div>
       <div className="border-b"></div>
       <div className="py-3 pl-3">
         <div className="flex items-center space-x-5">

@@ -1,8 +1,8 @@
-import { gql, useMutation } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { loginModal, signupModal } from "../../common/Atom";
-import LoginForm from "../../components/auth/LoginForm";
+import { gql, useMutation } from '@apollo/client'
+import { useState } from 'react'
+import { useSetRecoilState } from 'recoil'
+import { loginModal, signupModal } from '../../../common/Atom'
+import LoginForm from './LoginForm'
 
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
@@ -14,51 +14,40 @@ const LOGIN = gql`
       }
     }
   }
-`;
+`
 
 export default function Login() {
-  const setLoginModal = useSetRecoilState(loginModal);
-  const setSignupModal = useSetRecoilState(signupModal);
+  const setLoginModal = useSetRecoilState(loginModal)
+  const setSignupModal = useSetRecoilState(signupModal)
 
   const [info, setInfo] = useState({
-    email: "",
-    password: "",
-  });
+    email: '',
+    password: '',
+  })
 
-  const [login, { loading, error, data }] = useMutation(LOGIN);
-
-  useEffect(() => {
-    if (error) {
-      alert(error.message);
-    }
-    if (data?.login) {
-      localStorage.setItem("token", data?.login?.token);
-      alert("로그인되었습니다.");
-      closeModal();
-    }
-  }, [error, data?.login.token]);
+  const [login, { loading, error, data }] = useMutation(LOGIN)
 
   const inputInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setInfo({
       ...info,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    login({ variables: info });
-  };
+    e.preventDefault()
+    login({ variables: info })
+  }
 
   const closeModal = () => {
-    setLoginModal((prev) => !prev);
-  };
+    setLoginModal((prev: boolean) => !prev)
+  }
 
   const clickSignUp = () => {
-    closeModal();
-    setSignupModal(true);
-  };
+    closeModal()
+    setSignupModal(true)
+  }
 
   return (
     <div className="absolute top-0 right-0 bottom-0 left-0 h-screen w-full bg-black/70">
@@ -98,5 +87,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  );
+  )
 }

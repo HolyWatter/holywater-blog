@@ -32,3 +32,9 @@ export interface CommentType {
     nickname: string
   }
 }
+
+
+export interface Contents{
+  title : string
+  text : string
+}

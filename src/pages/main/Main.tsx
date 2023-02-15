@@ -1,9 +1,8 @@
 import { gql, useQuery } from '@apollo/client'
-import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import Posting from '../../components/Main/Posting'
-import AddPost from '../../components/post/AddPost'
+import { useState } from 'react'
+import Posting from '../../components/pages/Main/Posting'
 import { PostingType } from '../../common/interface'
+import AddPost from '../../components/pages/Main/AddPost'
 
 const GETPOSTING = gql`
   query AllPosting {

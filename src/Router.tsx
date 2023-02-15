@@ -5,7 +5,6 @@ import Develop from './pages/Develop/Develop'
 import PostDevelop from './pages/Develop/PostDevelop'
 import DevelopDetail from './pages/Develop/DevelopDetail'
 import Sidebar from './components/Aside/Sidebar'
-import ImaTest from './pages/ImaTest'
 
 function App() {
   return (
@@ -13,13 +12,12 @@ function App() {
       <Nav />
       <div className="h-full min-h-screen bg-bg py-16">
         <Sidebar />
-        <div className="inline-block w-3/4">
+        <div className="inline-block md:w-4/5 md-m:w-full">
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/develop" element={<Develop />} />
             <Route path="/postdevelop" element={<PostDevelop />} />
             <Route path="/develop/:id" element={<DevelopDetail />} />
-            <Route path="/test" element={<ImaTest />} />
           </Routes>
         </div>
       </div>

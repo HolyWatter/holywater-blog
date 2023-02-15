@@ -1,7 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
-import { useEffect, useState } from 'react'
 import { PostingType } from '../../common/interface'
-import MarkdownPosting from '../../components/Develop/MarkdownPosting'
+import MarkdownPosting from '../../components/pages/Develop/DevelopList/MarkdownPosting'
 
 const GETMARKDOWN = gql`
   query allMarkdown {
@@ -19,7 +18,7 @@ const GETMARKDOWN = gql`
     }
   }
 `
-export default function Develop() {
+export default function DevelopList() {
   const { data, loading } = useQuery(GETMARKDOWN)
 
   return (

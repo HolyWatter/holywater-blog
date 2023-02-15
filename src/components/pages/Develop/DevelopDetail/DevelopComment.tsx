@@ -1,4 +1,4 @@
-import { CommentType } from '../../common/interface'
+import { CommentType } from '../../../common/interface'
 interface Props {
   comment: CommentType
 }
