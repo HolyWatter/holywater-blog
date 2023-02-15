@@ -23,6 +23,10 @@ const ADDPOST = gql`
         id
         tag
       }
+      img{
+        id
+        location
+      }
     }
   }
 `
@@ -120,7 +124,7 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
   }
 
   return (
-    <div className=" absolute top-0 right-0 bottom-0 left-0 z-10 bg-black/50">
+    <div className="fixed top-0 right-0 bottom-0 left-0 z-10 bg-black/50">
       <div className="absolute top-[40%] left-[50%] flex w-[450px] max-w-[450px] translate-x-[-50%] translate-y-[-50%]  flex-col space-y-3 rounded-md border bg-white py-7 px-5">
         <div className="pb-3 text-center font-semibold text-gray-700">
           게시글 작성

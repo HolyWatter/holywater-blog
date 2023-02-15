@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Markdown from '../../components/Markdown/Markdow'
 import { gql, useMutation } from '@apollo/client'
 import PostDevelopForm from '../../components/pages/Develop/PostDevelop/PostDevelopForm'
@@ -17,9 +17,13 @@ const ADDMARKDOWN = gql`
       title
       created
       user_id
-      MarkdownImg {
+      MarkdownImg{
         id
         location
+      }
+      MarkdownTag{
+        id 
+        tag
       }
     }
   }
@@ -32,6 +36,8 @@ export default function PostDevelop() {
     text: '',
   })
   const [img, setImg] = useState<any>([])
+  const navigate = useNavigate();
+
   const [addMarkdown, { data }] = useMutation(ADDMARKDOWN, {
     context: {
       headers: {
@@ -39,6 +45,12 @@ export default function PostDevelop() {
       },
     },
   })
+
+  useEffect(()=>{
+    if(data){
+      navigate(`/develop/${data.addMarkdown.id}`)
+    }
+  }, [data])
 
   const submitPost = (e: React.MouseEvent<HTMLButtonElement>) => {
     addMarkdown({

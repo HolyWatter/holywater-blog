@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { loginModal, signupModal } from '../../common/Atom'
-import Login from '../auth/Login'
-import SignUp from '../auth/SignUp'
+import Login from '../pages/Login/Login'
+import SignUp from '../pages/SignUp/SignUp'
 
 export default function Nav() {
   const isLoginModal = useRecoilValue(loginModal)

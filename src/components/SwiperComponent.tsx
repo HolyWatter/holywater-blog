@@ -10,6 +10,7 @@ interface Props {
 }
 
 export default function SwiperComponents({ img }: Props) {
+  console.log(img)
   return (
     <Swiper
       spaceBetween={50}

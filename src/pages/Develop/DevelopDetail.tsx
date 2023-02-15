@@ -60,10 +60,20 @@ export default function DevelopDetail() {
               }).format(new Date(data.markdownDetail.created))}
             </p>
           </div>
-          <div className="z-0 px-5">
-            {data.markdownDetail.MarkdownImg && (
-              <SwiperComponents img={data.markdownDetail.MarkdownImg} />
+          <div className="flex flex-wrap space-x-3">
+            {data.markdownDetail.MarkdownTag.map(
+              (item: { id: number; tag: string }) => (
+                <p
+                  className="mb-4 rounded-full bg-origin px-3 py-1 text-white"
+                  key={item.id}
+                >
+                  {item.tag}
+                </p>
+              )
             )}
+          </div>
+          <div className="z-0 px-5">
+            {<SwiperComponents img={data.markdownDetail.MarkdownImg} />}
           </div>
           <div className="py-[20px]">
             <Markdown markdown={data.markdownDetail.text} />

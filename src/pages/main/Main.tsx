@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Posting from '../../components/pages/Main/Posting'
 import { PostingType } from '../../common/interface'
 import AddPost from '../../components/pages/Main/AddPost'
@@ -35,6 +35,7 @@ const GETPOSTING = gql`
   }
 `
 
+
 export default function Main() {
   const [isPosting, setIsPosting] = useState<boolean>(false)
 
@@ -43,7 +44,13 @@ export default function Main() {
   }
   const { data, loading, refetch } = useQuery(GETPOSTING)
 
-  console.log(data)
+  useEffect(() => {
+    if (isPosting) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isPosting])
 
   return (
     <div className="">

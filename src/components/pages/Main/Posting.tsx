@@ -53,6 +53,7 @@ export default function Posting({ posting, refetch }: Props) {
     setComment('')
     refetch()
   }
+  console.log(posting.img)
 
   return (
     <div className="my-5 w-[70%] max-w-[450px] rounded-md border">

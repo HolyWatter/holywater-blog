@@ -1,4 +1,4 @@
-import { PostingType } from '../../../common/interface'
+import { PostingType } from '../../../../common/interface'
 import { Link } from 'react-router-dom'
 interface Props {
   posting: PostingType

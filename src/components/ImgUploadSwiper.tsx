@@ -19,10 +19,10 @@ export default function ImgUploadSwiper({ img }: Props) {
     >
       {img.map((item, idx) => (
         <SwiperSlide key={idx}>
-          <div className="w-full max-w-[450px]">
+          <div className="w-full">
             <img
               alt=""
-              className="max-h-[400px] w-full bg-cover"
+              className="w-full bg-cover"
               src={`${item}`}
             />
           </div>
