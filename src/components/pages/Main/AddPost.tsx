@@ -65,7 +65,7 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
 
   const clickPost = async () => {
     if (contents.text !== '' && contents.title !== '') {
-      addPosting({
+      await addPosting({
         variables: {
           title: contents.title,
           text: contents.text,

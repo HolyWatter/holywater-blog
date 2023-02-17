@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import Markdown from '../../components/Markdown/Markdow'
 import { gql, useMutation } from '@apollo/client'
 import PostDevelopForm from '../../components/pages/Develop/PostDevelop/PostDevelopForm'
+import { useRecoilValue } from 'recoil'
 
 const ADDMARKDOWN = gql`
   mutation addMarkdown(
@@ -17,12 +18,12 @@ const ADDMARKDOWN = gql`
       title
       created
       user_id
-      MarkdownImg{
+      MarkdownImg {
         id
         location
       }
-      MarkdownTag{
-        id 
+      MarkdownTag {
+        id
         tag
       }
     }
@@ -36,7 +37,7 @@ export default function PostDevelop() {
     text: '',
   })
   const [img, setImg] = useState<any>([])
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [addMarkdown, { data }] = useMutation(ADDMARKDOWN, {
     context: {
@@ -46,8 +47,8 @@ export default function PostDevelop() {
     },
   })
 
-  useEffect(()=>{
-    if(data){
+  useEffect(() => {
+    if (data) {
       navigate(`/develop/${data.addMarkdown.id}`)
     }
   }, [data])
@@ -64,8 +65,8 @@ export default function PostDevelop() {
   }
 
   return (
-    <div className="flex h-full py-10 px-10 md:space-x-7">
-      <div className="h-full  space-y-3 md-m:w-full md:w-[50%]">
+    <div className="w-full h-full py-10 md:pr-10">
+      <div className="xl:inline-block w-full h-full space-y-3 xl:w-[40%]">
         <PostDevelopForm
           contents={contents}
           setContents={setContents}
@@ -103,7 +104,7 @@ export default function PostDevelop() {
           </button>
         </div>
       </div>
-      <div className="w-[50%] break-words md-m:hidden">
+      <div className="mt-10 xl:ml-10 align-top xl-m:hidden xl:inline-block break-words xl:w-[40%]">
         <Markdown markdown={contents.text} />
       </div>
     </div>

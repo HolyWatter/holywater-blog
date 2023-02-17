@@ -53,10 +53,9 @@ export default function Posting({ posting, refetch }: Props) {
     setComment('')
     refetch()
   }
-  console.log(posting.img)
 
   return (
-    <div className="my-5 w-[70%] max-w-[450px] rounded-md border">
+    <div className="my-5 max-w-[450px] rounded-md border">
       <div className="flex flex-col justify-center space-y-3 py-2 pl-3">
         <p>{posting.author.nickname}</p>
         <p className="text-xs text-gray-500">{timeFormat}</p>
