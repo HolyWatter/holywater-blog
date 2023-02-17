@@ -1,9 +1,8 @@
 import { gql, useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import Posting from '../../components/Main/Posting'
-import AddPost from '../../components/post/AddPost'
+import Posting from '../../components/pages/Main/Posting'
 import { PostingType } from '../../common/interface'
+import AddPost from '../../components/pages/Main/AddPost'
 
 const GETPOSTING = gql`
   query AllPosting {
@@ -12,8 +11,15 @@ const GETPOSTING = gql`
       created
       title
       text
-      img
+      img{
+        id
+        location
+      }
       text
+      tag{
+        id
+        tag
+      }
       author {
         id
         nickname
@@ -29,28 +35,30 @@ const GETPOSTING = gql`
   }
 `
 
+
 export default function Main() {
   const [isPosting, setIsPosting] = useState<boolean>(false)
-  const [postingList, setPostingList] = useState<PostingType[]>([])
 
   const clickAddPost = () => {
     setIsPosting((prev) => !prev)
   }
-  const { data } = useQuery(GETPOSTING)
+  const { data, loading, refetch } = useQuery(GETPOSTING)
 
   useEffect(() => {
-    if (data?.AllPosting) {
-      setPostingList(data?.AllPosting)
+    if (isPosting) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
     }
-  }, [data])
+  }, [isPosting])
 
   return (
     <div className="">
-      <Link to="/develop">개발일지</Link>
       <div className="flex flex-col items-center">
-        {postingList.map((posting) => (
-          <Posting key={posting.id} posting={posting} />
-        ))}
+        {!loading &&
+          data.AllPosting.map((posting: PostingType) => (
+            <Posting key={posting.id} posting={posting} refetch={refetch} />
+          ))}
       </div>
       <button
         onClick={clickAddPost}
@@ -71,7 +79,7 @@ export default function Main() {
           />
         </svg>
       </button>
-      {isPosting && <AddPost setIsPosting={setIsPosting} />}
+      {isPosting && <AddPost setIsPosting={setIsPosting} refetch={refetch} />}
     </div>
   )
 }

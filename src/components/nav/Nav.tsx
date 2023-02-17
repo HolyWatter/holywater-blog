@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { loginModal, signupModal } from '../../common/Atom'
-import Login from '../auth/Login'
-import SignUp from '../auth/SignUp'
+import Login from '../pages/Login/Login'
+import SignUp from '../pages/SignUp/SignUp'
 
 export default function Nav() {
   const isLoginModal = useRecoilValue(loginModal)
@@ -22,7 +22,7 @@ export default function Nav() {
   }, [isLoginModal, isSignupModal])
 
   return (
-    <div className="fixed flex h-16 w-full items-center justify-between border-b bg-origin px-5 shadow-md">
+    <div className="fixed flex h-16 w-full items-center justify-between border-b bg-origin px-5 shadow-md z-10">
       <Link to="/" className="text-2xl font-normal text-gray-300">
         성수의 블로그
       </Link>

@@ -1,26 +1,49 @@
-import { useMutation, gql } from '@apollo/client'
-import { useEffect, useState } from 'react'
+import {
+  useMutation,
+  gql,
+  ApolloQueryResult,
+  OperationVariables,
+} from '@apollo/client'
+import { useState } from 'react'
 import TagForm from './TagForm'
 
 const ADDPOST = gql`
-  mutation addPosting($title: String!, $text: String!) {
-    addPosting(title: $title, text: $text) {
+  mutation addPosting(
+    $title: String!
+    $text: String!
+    $img: [Upload]
+    $tag: [String]
+  ) {
+    addPosting(title: $title, text: $text, img: $img, tag: $tag) {
       id
       text
       title
       user_id
+      tag {
+        id
+        tag
+      }
+      img{
+        id
+        location
+      }
     }
   }
 `
+
 interface Props {
   setIsPosting: React.Dispatch<React.SetStateAction<boolean>>
+  refetch: (
+    variables?: Partial<OperationVariables> | undefined
+  ) => Promise<ApolloQueryResult<any>>
 }
 
-export default function AddPost({ setIsPosting }: Props) {
+export default function AddPost({ setIsPosting, refetch }: Props) {
   const [contents, setContents] = useState({
     title: '',
     text: '',
   })
+  const [img, setImg] = useState<any>([])
   const [tagList, setTagList] = useState<string[]>([])
   const [tag, setTag] = useState<string>('')
   const [addPosting, { data }] = useMutation(ADDPOST, {
@@ -30,7 +53,6 @@ export default function AddPost({ setIsPosting }: Props) {
       },
     },
   })
-
   const inputContents = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -40,16 +62,20 @@ export default function AddPost({ setIsPosting }: Props) {
       [name]: value,
     })
   }
-  useEffect(() => {
-    if (data?.addPosting) {
-      alert('게시글이 작성되었습니다.')
-      closeModal()
-    }
-  }, [data])
 
   const clickPost = async () => {
     if (contents.text !== '' && contents.title !== '') {
-      addPosting({ variables: contents })
+      addPosting({
+        variables: {
+          title: contents.title,
+          text: contents.text,
+          tag: tagList,
+          img,
+        },
+      })
+      alert('게시글이 작성되었습니다.')
+      closeModal()
+      refetch()
     } else {
       alert('내용을 입력해주세요')
     }
@@ -81,9 +107,25 @@ export default function AddPost({ setIsPosting }: Props) {
     setTagList(tagList.filter((tag) => tag !== e.currentTarget.value))
   }
 
+  const selectImg = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileArr = Object.values(e.target.files as any)
+    let file
+    let newArr: any = []
+    for (let i in fileArr) {
+      file = fileArr[i]
+      const reader = new FileReader()
+      reader.readAsDataURL(file as any)
+      reader.onloadend = (finishedEvent) => {
+        const { currentTarget } = finishedEvent
+        newArr[i] = (currentTarget as any).result
+        setImg([...newArr])
+      }
+    }
+  }
+
   return (
-    <div className="absolute top-0 right-0 bottom-0 left-0 bg-black/50">
-      <div className="absolute top-[40%] left-[50%] flex w-[50%] translate-x-[-50%] translate-y-[-50%]  flex-col space-y-3 rounded-md border bg-white py-7 px-5">
+    <div className="fixed top-0 right-0 bottom-0 left-0 z-10 bg-black/50">
+      <div className="absolute top-[40%] left-[50%] flex w-[450px] max-w-[450px] translate-x-[-50%] translate-y-[-50%]  flex-col space-y-3 rounded-md border bg-white py-7 px-5">
         <div className="pb-3 text-center font-semibold text-gray-700">
           게시글 작성
         </div>
@@ -94,13 +136,14 @@ export default function AddPost({ setIsPosting }: Props) {
           placeholder="제목을 입력하세요"
           className="border-b py-1 pl-2 focus:outline-none"
         />
-          <TagForm
-            deleteTag={deleteTag}
-            inputTag={inputTag}
-            tag={tag}
-            submitTagForm={submitTagForm}
-            tagList={tagList}
-          />
+        <TagForm
+          deleteTag={deleteTag}
+          inputTag={inputTag}
+          tag={tag}
+          submitTagForm={submitTagForm}
+          tagList={tagList}
+        />
+        <input type="file" multiple={true} onChange={selectImg} />
         <textarea
           onChange={inputContents}
           name="text"

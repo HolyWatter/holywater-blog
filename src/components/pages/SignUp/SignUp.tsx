@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { SignUpInfo } from "../../common/interface";
+import { SignUpInfo } from "../../../common/interface";
 import { useMutation, gql } from "@apollo/client";
-import SignUpForm from "../../components/auth/SignUpForm";
+import SignUpForm from "./SignUpForm";
 import { useSetRecoilState } from "recoil";
-import { loginModal, signupModal } from "../../common/Atom";
+import { loginModal, signupModal } from "../../../common/Atom";
 
 const SIGNUP = gql`
   mutation SignUp(
