@@ -1,16 +1,18 @@
-import { atom } from "recoil";
+import { atom } from 'recoil'
 
-export const currentUser = atom({
-  key: "currentUser",
-  default: {},
-});
+export const loginState = atom({
+  key: 'loginState',
+  default: {
+    __typename: '', nickname: '', email: '', role: ''
+  },
+})
 
 export const loginModal = atom({
-  key: "loginModal",
+  key: 'loginModal',
   default: false,
-});
+})
 
 export const signupModal = atom({
-  key: "signupModal",
+  key: 'signupModal',
   default: false,
-});
+})

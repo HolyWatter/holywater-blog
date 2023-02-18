@@ -10,9 +10,9 @@ function App() {
   return (
     <BrowserRouter>
       <Nav />
-      <div className="h-full min-h-screen bg-bg py-16">
+      <div className="mx-0 h-full min-h-screen justify-center bg-bg py-16">
         <Sidebar />
-        <div className="inline-block md:w-4/5 md-m:w-full">
+        <div className="md:pl-[200px]">
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/develop" element={<DevelopList />} />

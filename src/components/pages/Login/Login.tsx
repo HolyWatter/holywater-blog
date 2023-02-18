@@ -1,5 +1,11 @@
-import { gql, useMutation } from '@apollo/client'
-import { useState } from 'react'
+import {
+  ApolloQueryResult,
+  gql,
+  LazyQueryExecFunction,
+  OperationVariables,
+  useMutation,
+} from '@apollo/client'
+import { useEffect, useState } from 'react'
 import { useSetRecoilState } from 'recoil'
 import { loginModal, signupModal } from '../../../common/Atom'
 import LoginForm from './LoginForm'
@@ -7,25 +13,53 @@ import LoginForm from './LoginForm'
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
-      token
+      acessToken
       loginUser {
         id
         nickname
       }
+      message
     }
   }
 `
 
-export default function Login() {
+interface Props {
+  currentUser: LazyQueryExecFunction<any, OperationVariables>
+  setIsLogin : React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export default function Login({ currentUser, setIsLogin }: Props) {
   const setLoginModal = useSetRecoilState(loginModal)
   const setSignupModal = useSetRecoilState(signupModal)
+  
 
   const [info, setInfo] = useState({
     email: '',
     password: '',
   })
 
-  const [login, { loading, error, data }] = useMutation(LOGIN)
+  const [login, { error, data }] = useMutation(LOGIN)
+
+  useEffect(() => {
+    if (error) {
+      alert(error.message)
+    }
+    if (data?.login.message) {
+      localStorage.setItem('token', data.login.acessToken)
+      alert(data.login.message)
+      setLoginModal((prev) => !prev)
+      setIsLogin(true)
+      currentUser({
+        context: {
+          headers: {
+            Authorization: localStorage.getItem('token'),
+          },
+        },
+        fetchPolicy: "network-only",
+      })
+    }
+  }, [error, data])
+
 
   const inputInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -35,9 +69,9 @@ export default function Login() {
     })
   }
 
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    login({ variables: info })
+    await login({ variables: info })
   }
 
   const closeModal = () => {

@@ -1,8 +1,10 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql, useLazyQuery, useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import Posting from '../../components/pages/Main/Posting'
 import { PostingType } from '../../common/interface'
 import AddPost from '../../components/pages/Main/AddPost'
+import { useRecoilValue } from 'recoil'
+import { loginState } from '../../common/Atom'
 
 const GETPOSTING = gql`
   query AllPosting {
@@ -11,12 +13,12 @@ const GETPOSTING = gql`
       created
       title
       text
-      img{
+      img {
         id
         location
       }
       text
-      tag{
+      tag {
         id
         tag
       }
@@ -35,9 +37,9 @@ const GETPOSTING = gql`
   }
 `
 
-
 export default function Main() {
   const [isPosting, setIsPosting] = useState<boolean>(false)
+  const currentUser = useRecoilValue(loginState)
 
   const clickAddPost = () => {
     setIsPosting((prev) => !prev)
@@ -52,6 +54,11 @@ export default function Main() {
     }
   }, [isPosting])
 
+  useEffect(()=>{
+    refetch()
+  }, [data])
+
+
   return (
     <div className="">
       <div className="flex flex-col items-center">
@@ -60,26 +67,10 @@ export default function Main() {
             <Posting key={posting.id} posting={posting} refetch={refetch} />
           ))}
       </div>
-      <button
-        onClick={clickAddPost}
-        className="fixed bottom-5 right-[10%] flex h-12 w-12 items-center justify-center rounded-full bg-origin text-white"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="h-9 w-9"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 4.5v15m7.5-7.5h-15"
-          />
-        </svg>
-      </button>
       {isPosting && <AddPost setIsPosting={setIsPosting} refetch={refetch} />}
+      {currentUser?.role=== 'creator' && (
+        <button className="fixed bottom-10 right-10 z-10" onClick={clickAddPost}> asd</button>
+      )}
     </div>
   )
 }
