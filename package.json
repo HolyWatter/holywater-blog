@@ -17,6 +17,7 @@
     "graphql-upload": "^16.0.2",
     "postcss": "^8.4.21",
     "react": "^18.2.0",
+    "react-cropper": "^2.1.8",
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.5",
     "react-router-dom": "^6.8.1",

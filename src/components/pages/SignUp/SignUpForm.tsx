@@ -1,13 +1,33 @@
-import { SignUpInfo } from "../../../common/interface";
-import Input from "../../Input";
+import React, { useState } from 'react'
+import { SignUpInfo } from '../../../common/interface'
+import Input from '../../Input'
+import CropProfile from './CropProfile'
 
 interface Props {
-  submitForm: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
-  inputInfo: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  info: SignUpInfo;
+  submitForm: (e: React.FormEvent<HTMLFormElement>) => Promise<void>
+  inputInfo: (e: React.ChangeEvent<HTMLInputElement>) => void
+  info: SignUpInfo
+  setProfileImg: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
-export default function SignUpForm({ submitForm, inputInfo, info }: Props) {
+export default function SignUpForm({
+  submitForm,
+  inputInfo,
+  info,
+  setProfileImg,
+}: Props) {
+  const [img, setImg] = useState<string>()
+
+  const selectImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const img = e.target.files![0]
+    const reader = new FileReader()
+    reader.readAsDataURL(img)
+    reader.onloadend = (finishedEvent) => {
+      const { currentTarget } = finishedEvent
+      setImg((currentTarget as any).result)
+    }
+  }
+
   return (
     <form
       onSubmit={submitForm}
@@ -41,7 +61,19 @@ export default function SignUpForm({ submitForm, inputInfo, info }: Props) {
         name="nickname"
         type="text"
       />
+
+      <div className="relative border py-7 px-3">
+        <p className="px-2 absolute top-[-10px] text-gray-400 bg-white">프로필 사진을 등록하세요</p>
+        <input
+          className="pb-4"
+          onChange={selectImg}
+          type="file"
+          multiple={false}
+          accept="image/*"
+        />
+        <CropProfile img={img} setProfileImg={setProfileImg} />
+      </div>
       <button className="h-10 rounded-sm border">회원가입</button>
     </form>
-  );
+  )
 }

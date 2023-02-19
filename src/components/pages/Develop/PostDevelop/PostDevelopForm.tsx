@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Contents } from '../../../../common/interface'
 import ImgUploadSwiper from '../../../ImgUploadSwiper'
 import DevelopTagForm from '../DevelopTagForm'
@@ -18,28 +18,31 @@ export default function PostDevelopForm({
   setImg,
   setTagList,
   tagList,
-  img
+  img,
 }: Props) {
   const [tag, setTag] = useState<string>('')
   const pressTabKey = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return
+    }
     if (e.key === 'Tab') {
       e.preventDefault()
-      const start = e.currentTarget.selectionStart
-      const end = e.currentTarget.selectionEnd
+      const start: number | null = e.currentTarget.selectionStart
+      const end: number | null = e.currentTarget.selectionEnd
       const value = e.currentTarget.value
       e.currentTarget.value =
-        value.substring(0, start) + '\t' + value.substring(end)
-      e.currentTarget.selectionStart = e.currentTarget.selectionEnd = start + 1
+        value.substring(0, start!) + '\t' + value.substring(end!)
+      e.currentTarget.selectionStart = e.currentTarget.selectionEnd = start! + 1
       return false
     }
     if (e.key === 'Enter') {
       e.preventDefault()
-      const start = e.currentTarget.selectionStart
-      const end = e.currentTarget.selectionEnd
+      const start: number | null = e.currentTarget.selectionStart
+      const end: number | null = e.currentTarget.selectionEnd
       const value = e.currentTarget.value
       e.currentTarget.value =
-        value.substring(0, start) + '\n' + value.substring(end)
-      e.currentTarget.selectionStart = e.currentTarget.selectionEnd = start + 1
+        value.substring(0, start!) + '\n' + value.substring(end!)
+      e.currentTarget.selectionStart = e.currentTarget.selectionEnd = start! + 1
       return false
     }
   }
@@ -110,6 +113,7 @@ export default function PostDevelopForm({
         multiple={true}
         onChange={selectImg}
         className="w-full"
+        accept="image/*"
       />
       {<ImgUploadSwiper img={img} />}
       <textarea
@@ -118,7 +122,7 @@ export default function PostDevelopForm({
         name="text"
         value={contents.text}
         placeholder="오늘 공부한 내용을 적어보세요..."
-        className="min-h-[350px] w-full resize-none bg-bg pl-3 focus:outline-none"
+        className="mt-4 min-h-[350px] w-full resize-none bg-bg pl-3 focus:outline-none"
       />
     </div>
   )
