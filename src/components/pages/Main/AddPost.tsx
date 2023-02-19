@@ -23,7 +23,7 @@ const ADDPOST = gql`
         id
         tag
       }
-      img{
+      img {
         id
         location
       }
@@ -143,7 +143,12 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
           submitTagForm={submitTagForm}
           tagList={tagList}
         />
-        <input type="file" multiple={true} onChange={selectImg} />
+        <input
+          type="file"
+          multiple={true}
+          onChange={selectImg}
+          accept="image/*"
+        />
         <textarea
           onChange={inputContents}
           name="text"
