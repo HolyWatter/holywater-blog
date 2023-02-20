@@ -54,10 +54,9 @@ export default function Main() {
     }
   }, [isPosting])
 
-  useEffect(()=>{
+  useEffect(() => {
     refetch()
   }, [data])
-
 
   return (
     <div className="">
@@ -68,8 +67,26 @@ export default function Main() {
           ))}
       </div>
       {isPosting && <AddPost setIsPosting={setIsPosting} refetch={refetch} />}
-      {currentUser?.role=== 'creator' && (
-        <button className="fixed bottom-10 right-10 z-10" onClick={clickAddPost}> asd</button>
+      {currentUser?.role === 'creator' && (
+        <button
+          className="fixed bottom-10 right-[10%] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-origin"
+          onClick={clickAddPost}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="white"
+            className="h-10 w-10"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+        </button>
       )}
     </div>
   )

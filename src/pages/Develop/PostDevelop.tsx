@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, Router, useNavigate } from 'react-router-dom'
 import Markdown from '../../components/Markdown/Markdow'
 import { gql, useMutation } from '@apollo/client'
 import PostDevelopForm from '../../components/pages/Develop/PostDevelop/PostDevelopForm'
 import { useRecoilValue } from 'recoil'
+import { loginState } from '../../common/Atom'
 
 const ADDMARKDOWN = gql`
   mutation addMarkdown(
@@ -32,6 +33,7 @@ const ADDMARKDOWN = gql`
 
 export default function PostDevelop() {
   const [tagList, setTagList] = useState<string[]>([])
+  const currentUser = useRecoilValue(loginState)
   const [contents, setContents] = useState({
     title: '',
     text: '',
@@ -46,6 +48,14 @@ export default function PostDevelop() {
       },
     },
   })
+  console.log(currentUser)
+
+  useEffect(() => {
+    if (currentUser.role !== 'creator') {
+      alert('권한이 없습니다.')
+      navigate('/')
+    }
+  }, [])
 
   useEffect(() => {
     if (data) {
@@ -65,8 +75,8 @@ export default function PostDevelop() {
   }
 
   return (
-    <div className="w-full h-full py-10 md:pr-10">
-      <div className="xl:inline-block w-full h-full space-y-3 xl:w-[40%]">
+    <div className="h-full w-full py-10 md:pr-10">
+      <div className="h-full w-full space-y-3 xl:inline-block xl:w-[40%]">
         <PostDevelopForm
           contents={contents}
           setContents={setContents}
@@ -104,7 +114,7 @@ export default function PostDevelop() {
           </button>
         </div>
       </div>
-      <div className="mt-10 xl:ml-10 align-top xl-m:hidden xl:inline-block break-words xl:w-[40%]">
+      <div className="mt-10 break-words align-top xl-m:hidden xl:ml-10 xl:inline-block xl:w-[40%]">
         <Markdown markdown={contents.text} />
       </div>
     </div>

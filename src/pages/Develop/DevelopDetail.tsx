@@ -5,6 +5,9 @@ import { CommentType } from '../../common/interface'
 import SwiperComponents from '../../components/SwiperComponent'
 import DevelopCommentForm from '../../components/pages/Develop/DevelopDetail/DevelopCommentForm'
 import DevelopComment from '../../components/pages/Develop/DevelopDetail/DevelopComment'
+import { useRecoilValue } from 'recoil'
+import { loginState } from '../../common/Atom'
+import DeleteAndModifyBtn from '../../components/pages/DeleteAndModifyBtn'
 
 const DETAIL = gql`
   query markdownDetail($id: Int!) {
@@ -38,6 +41,7 @@ const DETAIL = gql`
 `
 export default function DevelopDetail() {
   const { id } = useParams<string>()
+  const currentUser = useRecoilValue(loginState)
   const { data, loading, refetch } = useQuery(DETAIL, {
     variables: {
       id: parseInt(id!),
@@ -48,9 +52,14 @@ export default function DevelopDetail() {
     <div className="px-20 py-16 sm-m:px-3">
       {!loading && (
         <div>
-          <p className="border-b-2 border-origin pb-4 text-5xl font-semibold sm-m:text-4xl">
-            {data.markdownDetail.title}
-          </p>
+          <div className="flex items-end justify-between border-b-2 border-origin">
+            <p className=" pb-4 text-5xl font-semibold sm-m:text-4xl">
+              {data.markdownDetail.title}
+            </p>
+            {currentUser?.nickname === data.markdownDetail.author.nickname && (
+              <DeleteAndModifyBtn />
+            )}
+          </div>
           <div className="flex items-center space-x-4 py-3">
             <p className="text-xl">{data.markdownDetail.author.nickname}</p>
             <p className="text-sm text-gray-500">

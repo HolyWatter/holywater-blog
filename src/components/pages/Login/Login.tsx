@@ -25,10 +25,9 @@ const LOGIN = gql`
 
 interface Props {
   currentUser: LazyQueryExecFunction<any, OperationVariables>
-  setIsLogin : React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function Login({ currentUser, setIsLogin }: Props) {
+export default function Login({ currentUser }: Props) {
   const setLoginModal = useSetRecoilState(loginModal)
   const setSignupModal = useSetRecoilState(signupModal)
   
@@ -48,7 +47,6 @@ export default function Login({ currentUser, setIsLogin }: Props) {
       localStorage.setItem('token', data.login.acessToken)
       alert(data.login.message)
       setLoginModal((prev) => !prev)
-      setIsLogin(true)
       currentUser({
         context: {
           headers: {
