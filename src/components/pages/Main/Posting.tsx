@@ -66,7 +66,7 @@ export default function Posting({ posting, refetch }: Props) {
         <div className="flex justify-between pt-1 pr-2">
           <p>{posting.author.nickname}</p>
           {posting.author.nickname === currentUser?.nickname && (
-            <DeleteAndModifyBtn />
+            <DeleteAndModifyBtn clickModify={()=>{}} clickDelete={()=>{}}/>
           )}
         </div>
         <p className="text-xs text-gray-500">{timeFormat}</p>

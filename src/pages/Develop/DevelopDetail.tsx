@@ -8,6 +8,7 @@ import DevelopComment from '../../components/pages/Develop/DevelopDetail/Develop
 import { useRecoilValue } from 'recoil'
 import { loginState } from '../../common/Atom'
 import DeleteAndModifyBtn from '../../components/pages/DeleteAndModifyBtn'
+import { useEffect } from 'react'
 
 const DETAIL = gql`
   query markdownDetail($id: Int!) {
@@ -48,6 +49,11 @@ export default function DevelopDetail() {
     },
   })
 
+  useEffect(() => {
+    refetch()
+  }, [data])
+
+  console.log(data)
   return (
     <div className="px-20 py-16 sm-m:px-3">
       {!loading && (
@@ -56,18 +62,27 @@ export default function DevelopDetail() {
             <p className=" pb-4 text-5xl font-semibold sm-m:text-4xl">
               {data.markdownDetail.title}
             </p>
-            {currentUser?.nickname === data.markdownDetail.author.nickname && (
-              <DeleteAndModifyBtn />
-            )}
           </div>
-          <div className="flex items-center space-x-4 py-3">
-            <p className="text-xl">{data.markdownDetail.author.nickname}</p>
-            <p className="text-sm text-gray-500">
-              {new Intl.DateTimeFormat('KR', {
-                dateStyle: 'medium',
-                timeStyle: 'short',
-              }).format(new Date(data.markdownDetail.created))}
-            </p>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex items-center space-x-4 py-3">
+              <p className="text-xl">{data.markdownDetail.author.nickname}</p>
+              <p className="text-sm text-gray-500">
+                {new Intl.DateTimeFormat('KR', {
+                  dateStyle: 'medium',
+                  timeStyle: 'short',
+                }).format(new Date(data.markdownDetail.created))}
+              </p>
+            </div>
+            {currentUser?.nickname === data.markdownDetail.author.nickname && (
+              <div className="space-x-3">
+                <button onClick={()=>{}} className="underline">
+                  삭제
+                </button>
+                <button onClick={()=>{}} className="underline">
+                  수정
+                </button>
+              </div>
+            )}
           </div>
           <div className="flex flex-wrap space-x-3">
             {data.markdownDetail.MarkdownTag.map(

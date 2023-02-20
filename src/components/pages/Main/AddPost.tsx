@@ -74,8 +74,8 @@ export default function AddPost({ setIsPosting, refetch }: Props) {
         },
       })
       alert('게시글이 작성되었습니다.')
-      closeModal()
       refetch()
+      closeModal()
     } else {
       alert('내용을 입력해주세요')
     }

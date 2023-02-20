@@ -15,7 +15,7 @@ export default function DevelopComment({ comment }: Props) {
           {comment.writer.nickname}
         </p>
         {currentUser?.nickname === comment.writer.nickname && (
-          <DeleteAndModifyBtn />
+          <DeleteAndModifyBtn clickModify={()=>{}} clickDelete={()=>{}} />
         )}
       </div>
       <p>{comment.text}</p>

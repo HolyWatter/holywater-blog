@@ -29,7 +29,14 @@ export default function Nav() {
     setLoginModal(true)
   }
 
-  const [currentUser, { data, loading, refetch }] = useLazyQuery(CURRENTUSER)
+  const [currentUser, { data, refetch }] = useLazyQuery(CURRENTUSER, {
+    fetchPolicy: 'network-only',
+    context : {
+      headers : {
+        Authorization : localStorage.getItem('token')
+      }
+    }
+  })
 
   useEffect(() => {
     if (isLoginModal || isSignupModal) {
@@ -41,7 +48,9 @@ export default function Nav() {
 
   useEffect(() => {
     setCurrentUser(data?.currentUser)
+    refetch()
   }, [data])
+
 
   const clickProfile = () => {
     setIsMenu((prev) => !prev)
@@ -108,9 +117,7 @@ export default function Nav() {
             </svg>
           </button>
         )}
-        {isLoginModal && (
-          <Login currentUser={currentUser}  />
-        )}
+        {isLoginModal && <Login currentUser={currentUser} />}
         {isSignupModal && <SignUp />}
       </div>
       {isMenu && <Menu logout={logout} setIsMenu={setIsMenu} />}

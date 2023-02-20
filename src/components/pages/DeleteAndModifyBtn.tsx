@@ -1,7 +1,15 @@
-export default function DeleteAndModifyBtn() {
+interface Props {
+  clickModify: () => void
+  clickDelete: () => void
+}
+
+export default function DeleteAndModifyBtn({
+  clickModify,
+  clickDelete,
+}: Props) {
   return (
     <div className="flex space-x-2">
-      <button className="삭제">
+      <button className="삭제" onClick={clickDelete}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -17,7 +25,7 @@ export default function DeleteAndModifyBtn() {
           />
         </svg>
       </button>
-      <button>
+      <button onClick={clickModify} className="수정">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"

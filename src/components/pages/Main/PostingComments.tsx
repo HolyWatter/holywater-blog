@@ -15,7 +15,7 @@ export default function PostingComments({ comment }: Props) {
       <div className="flex w-full items-end justify-between">
         <p className="text-gray-700">{comment.text}</p>
         {comment.writer.nickname === currentUser?.nickname && (
-          <DeleteAndModifyBtn />
+          <DeleteAndModifyBtn clickModify={()=>{}} clickDelete={()=>{}}/>
         )}
       </div>
     </div>
