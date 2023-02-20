@@ -33,8 +33,29 @@ export interface CommentType {
   }
 }
 
+export interface Contents {
+  title: string
+  text: string
+}
 
-export interface Contents{
-  title : string
-  text : string
+export interface GuestBookType {
+  id: number
+  text: string
+  created: string
+  writer: {
+    id: number
+    nickname: string
+    thumbnail_url: string
+  }
+}
+
+export interface User {
+  email: string
+  nickname: string
+  thumbnail_url: string
+  Comment: CommentType[]
+  GuestBook: GuestBookType[]
+  MarkdownComment: CommentType[]
+  posts: PostingType[]
+  markdown: PostingType[]
 }

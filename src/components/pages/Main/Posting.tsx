@@ -4,9 +4,14 @@ import {
   OperationVariables,
   useMutation,
 } from '@apollo/client'
+import { cp } from 'fs'
 import { useState } from 'react'
+import { useRecoilValue } from 'recoil'
+import { loginState } from '../../../common/Atom'
 import { PostingType } from '../../../common/interface'
 import SwiperComponents from '../../SwiperComponent'
+import DeleteAndModifyBtn from '../DeleteAndModifyBtn'
+import PostingComments from './PostingComments'
 
 interface Props {
   posting: PostingType
@@ -26,6 +31,7 @@ const ADDCOMMENT = gql`
 
 export default function Posting({ posting, refetch }: Props) {
   const [comment, setComment] = useState('')
+  const currentUser = useRecoilValue(loginState)
   const date = new Date(posting.created)
   const timeFormat = new Intl.DateTimeFormat('KR', {
     dateStyle: 'medium',
@@ -57,7 +63,12 @@ export default function Posting({ posting, refetch }: Props) {
   return (
     <div className="my-5 max-w-[450px] rounded-md border">
       <div className="flex flex-col justify-center space-y-3 py-2 pl-3">
-        <p>{posting.author.nickname}</p>
+        <div className="flex justify-between pt-1 pr-2">
+          <p>{posting.author.nickname}</p>
+          {posting.author.nickname === currentUser?.nickname && (
+            <DeleteAndModifyBtn />
+          )}
+        </div>
         <p className="text-xs text-gray-500">{timeFormat}</p>
       </div>
       <div>{posting.img && <SwiperComponents img={posting.img} />}</div>
@@ -82,10 +93,7 @@ export default function Posting({ posting, refetch }: Props) {
       <div className="border-b" />
       <div className="flex flex-col py-3 pl-3">
         {posting.comments.map((comment) => (
-          <div key={comment.id} className="flex space-x-3">
-            <p className="font-semibold">{comment.writer.nickname}</p>
-            <p className="text-gray-700">{comment.text}</p>
-          </div>
+          <PostingComments key={comment.id} comment={comment}/>
         ))}
       </div>
       <form className="flex w-full" onSubmit={submitComment}>

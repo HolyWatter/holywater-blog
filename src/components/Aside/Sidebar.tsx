@@ -6,6 +6,7 @@ export default function Sidebar() {
       <div className="flex flex-col space-y-5 pl-3">
         <Link to="/develop">개발일지</Link>
         <Link to="/postdevelop">개발일지 작성</Link>
+        <Link to="/guestbook">방명록 작성</Link>
       </div>
     </div>
   )

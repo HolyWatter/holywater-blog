@@ -19,7 +19,6 @@ const CURRENTUSER = gql`
 `
 
 export default function Nav() {
-  const [isLogin, setIsLogin] = useState<boolean>(false)
   const [isMenu, setIsMenu] = useState<boolean>(false)
   const isLoginModal = useRecoilValue(loginModal)
   const isSignupModal = useRecoilValue(signupModal)
@@ -49,8 +48,7 @@ export default function Nav() {
   }
 
   const logout = async () => {
-    setIsLogin(false)
-    await localStorage.removeItem('token')
+    localStorage.removeItem('token')
     alert('로그아웃되었습니다.')
     await currentUser({
       context: {
@@ -66,6 +64,7 @@ export default function Nav() {
       email: '',
       role: '',
     })
+    setIsMenu(false)
   }
 
   return (
@@ -74,7 +73,7 @@ export default function Nav() {
         <Link to="/" className="text-2xl font-normal text-gray-300">
           성수의 블로그
         </Link>
-        {!isLogin ? (
+        {current?.email === '' ? (
           <button
             onClick={clickLogin}
             className="rounded-full bg-white px-2 py-1 text-origin"
@@ -82,7 +81,10 @@ export default function Nav() {
             로그인
           </button>
         ) : (
-          <div className="flex items-center space-x-2" onClick={clickProfile}>
+          <button
+            className="flex items-center space-x-2"
+            onClick={clickProfile}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-400">
               <img
                 className="h-11 w-11 rounded-full bg-white"
@@ -104,14 +106,14 @@ export default function Nav() {
                 d="M19.5 8.25l-7.5 7.5-7.5-7.5"
               />
             </svg>
-          </div>
+          </button>
         )}
         {isLoginModal && (
-          <Login currentUser={currentUser} setIsLogin={setIsLogin} />
+          <Login currentUser={currentUser}  />
         )}
         {isSignupModal && <SignUp />}
       </div>
-      {isMenu && <Menu logout={logout} />}
+      {isMenu && <Menu logout={logout} setIsMenu={setIsMenu} />}
     </div>
   )
 }

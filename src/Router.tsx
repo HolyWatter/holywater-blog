@@ -5,6 +5,8 @@ import DevelopList from './pages/Develop/DevelopList'
 import PostDevelop from './pages/Develop/PostDevelop'
 import DevelopDetail from './pages/Develop/DevelopDetail'
 import Sidebar from './components/Aside/Sidebar'
+import Guestbook from './pages/Guestbook/GuestBook'
+import Mypage from './pages/Mypage/Mypage'
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
             <Route path="/develop" element={<DevelopList />} />
             <Route path="/postdevelop" element={<PostDevelop />} />
             <Route path="/develop/:id" element={<DevelopDetail />} />
+            <Route path="/guestbook" element={<Guestbook />} />
+            <Route path="mypage" element={<Mypage />} />
           </Routes>
         </div>
       </div>
