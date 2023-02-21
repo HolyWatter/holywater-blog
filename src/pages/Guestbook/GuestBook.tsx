@@ -29,7 +29,6 @@ const WRITEGUESTBOOK = gql`
 
 export default function Guestbook() {
   const [text, setText] = useState<string>('')
-
   const { data, refetch } = useQuery(ALLGUESHBOOK)
   const [writeMutation] = useMutation(WRITEGUESTBOOK, {
     context: {
@@ -54,6 +53,7 @@ export default function Guestbook() {
     refetch()
   }
 
+
   return (
     <div className="mx-auto max-w-[700px]">
       <form
@@ -72,7 +72,7 @@ export default function Guestbook() {
       </form>
       <div className="my-10 w-[95%]">
         {data?.allGuestBook.map((item: GuestBookType) => (
-          <GuestBookItem key={item.id} item={item} />
+          <GuestBookItem key={item.id} item={item} refetch={refetch} />
         ))}
       </div>
     </div>

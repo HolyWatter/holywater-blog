@@ -1,4 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
+import { useEffect } from 'react'
 import { PostingType } from '../../common/interface'
 import MarkdownPosting from '../../components/pages/Develop/DevelopList/MarkdownPosting'
 
@@ -19,7 +20,11 @@ const GETMARKDOWN = gql`
   }
 `
 export default function DevelopList() {
-  const { data, loading } = useQuery(GETMARKDOWN)
+  const { data, loading, refetch } = useQuery(GETMARKDOWN)
+
+  useEffect(() => {
+    refetch()
+  }, [data])
 
   return (
     <div className="h-full w-full sm:px-[13%] md:px-[15%] lg:px-[20%]">

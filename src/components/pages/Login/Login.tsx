@@ -1,5 +1,4 @@
 import {
-  ApolloQueryResult,
   gql,
   LazyQueryExecFunction,
   OperationVariables,
@@ -30,13 +29,16 @@ interface Props {
 export default function Login({ currentUser }: Props) {
   const setLoginModal = useSetRecoilState(loginModal)
   const setSignupModal = useSetRecoilState(signupModal)
-  
-
   const [info, setInfo] = useState({
     email: '',
     password: '',
   })
-
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  })
   const [login, { error, data }] = useMutation(LOGIN)
 
   useEffect(() => {
@@ -53,11 +55,10 @@ export default function Login({ currentUser }: Props) {
             Authorization: localStorage.getItem('token'),
           },
         },
-        fetchPolicy: "network-only",
+        fetchPolicy: 'network-only',
       })
     }
   }, [error, data])
-
 
   const inputInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -82,7 +83,7 @@ export default function Login({ currentUser }: Props) {
   }
 
   return (
-    <div className="absolute top-0 right-0 bottom-0 left-0 h-screen w-full bg-black/70">
+    <div className="absolute top-0 right-0 bottom-0 left-0 z-30 h-screen w-full bg-black/70">
       <div className="absolute top-[50%] left-[50%] flex translate-y-[-50%] translate-x-[-50%] flex-col items-center rounded-sm border bg-white py-10 px-10">
         <button
           onClick={closeModal}

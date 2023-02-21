@@ -29,19 +29,33 @@ export default function Nav() {
     setLoginModal(true)
   }
 
-  const [currentUser, { data, loading, refetch }] = useLazyQuery(CURRENTUSER)
-
-  useEffect(() => {
-    if (isLoginModal || isSignupModal) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
+  const [currentUser, { data, refetch, error }] = useLazyQuery(CURRENTUSER, {
+    fetchPolicy: 'network-only',
+    context : {
+      headers : {
+        Authorization : localStorage.getItem('token')
+      }
     }
-  }, [isLoginModal, isSignupModal])
+  })
 
   useEffect(() => {
-    setCurrentUser(data?.currentUser)
-  }, [data])
+    if(localStorage.getItem('token')){
+      if(error){
+        localStorage.removeItem('token')
+        setCurrentUser({
+          __typename: '',
+          nickname: '',
+          email: '',
+          role: '',
+        })
+      }
+      setCurrentUser(data?.currentUser)
+      refetch()
+    }
+    
+      
+  }, [data, error])
+
 
   const clickProfile = () => {
     setIsMenu((prev) => !prev)
@@ -69,7 +83,7 @@ export default function Nav() {
 
   return (
     <div>
-      <div className="fixed z-10 flex h-16 w-full items-center justify-between border-b bg-origin px-5 shadow-md">
+      <div className="fixed z-20 flex h-16 w-full items-center justify-between border-b bg-origin px-5 shadow-md">
         <Link to="/" className="text-2xl font-normal text-gray-300">
           성수의 블로그
         </Link>
@@ -108,9 +122,7 @@ export default function Nav() {
             </svg>
           </button>
         )}
-        {isLoginModal && (
-          <Login currentUser={currentUser}  />
-        )}
+        {isLoginModal && <Login currentUser={currentUser} />}
         {isSignupModal && <SignUp />}
       </div>
       {isMenu && <Menu logout={logout} setIsMenu={setIsMenu} />}

@@ -42,6 +42,13 @@ export default function SignUp() {
 
   const [signUp, { error, data }] = useMutation(SIGNUP)
 
+  useEffect(()=>{
+    document.body.style.overflow ="hidden"
+    return ()=>{
+      document.body.style.overflow ="unset"
+    }
+  })
+
   useEffect(() => {
     if (data?.signup === null) {
       alert('회원가입되었습니다.')
@@ -76,7 +83,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="absolute top-0 right-0 bottom-0 left-0 h-screen w-full bg-black/70">
+    <div className="absolute top-0 right-0 bottom-0 left-0 h-screen w-full bg-black/70 z-30">
       <div className="absolute top-[50%] left-[50%] flex max-h-[800px] translate-y-[-50%] translate-x-[-50%] flex-col items-center overflow-y-auto rounded-sm border bg-white py-10 px-10">
         <button
           onClick={closeModal}

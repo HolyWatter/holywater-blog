@@ -48,7 +48,6 @@ export default function PostDevelop() {
       },
     },
   })
-  console.log(currentUser)
 
   useEffect(() => {
     if (currentUser.role !== 'creator') {
@@ -85,7 +84,7 @@ export default function PostDevelop() {
           tagList={tagList}
           img={img}
         />
-        <div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-between border-t bg-origin px-5">
+        <div className="fixed bottom-0 left-0 flex h-20 w-full items-center justify-between border-t bg-origin px-5 z-10">
           <Link
             to="/develop"
             className="flex items-center space-x-3 text-xl text-white"
