@@ -1,11 +1,16 @@
-import { ApolloQueryResult, OperationVariables } from '@apollo/client'
-import { useState } from 'react'
+import {
+  ApolloQueryResult,
+  gql,
+  OperationVariables,
+  useMutation,
+} from '@apollo/client'
+import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { loginState } from '../../../common/Atom'
 import { GuestBookType } from '../../../common/interface'
 import DeleteAndModifyBtn from '../DeleteAndModifyBtn'
-import DeleteGuestBook from './DeleteGuestBook'
-import ModifyGuestBook from './ModifyGuestBook'
+import DeleteModal from '../../Modal/DeleteModal'
+import ModifyModal from '../../Modal/ModifyModal'
 
 interface Props {
   item: GuestBookType
@@ -13,18 +18,78 @@ interface Props {
     variables?: Partial<OperationVariables> | undefined
   ) => Promise<ApolloQueryResult<any>>
 }
+const DELETE = gql`
+  mutation deleteGueshBook($id: Int!) {
+    deleteGuestBook(id: $id) {
+      id
+      text
+    }
+  }
+`
+
+const MODIFY = gql`
+  mutation modifyGueshBook($id: Int!, $text: String!) {
+    modifyGuestBook(id: $id, text: $text) {
+      id
+      text
+    }
+  }
+`
 
 export default function GuestBookItem({ item, refetch }: Props) {
   const [isModify, setIsModify] = useState<boolean>(false)
   const [isDelete, setIsDelete] = useState<boolean>(false)
+  const [modifyText, setModifyText] = useState<string>('')
   const currentUser = useRecoilValue(loginState)
+  const [deleteMutation, deleteRes] = useMutation(DELETE, {
+    context: {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    },
+  })
+  const [modifyMutation, modifyRes] = useMutation(MODIFY, {
+    context: {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      },
+    },
+  })
+
+  useEffect(() => {
+    if (deleteRes.data) {
+      alert('방명록이 삭제되었습니다.')
+      refetch()
+    }
+  }, [deleteRes])
 
   const clickModify = () => {
-    setIsModify(true)
+    setIsModify((prev) => !prev)
+    setModifyText("")
   }
 
   const clickDelete = () => {
-    setIsDelete(true)
+    setIsDelete((prev) => !prev)
+  }
+
+  const confirmDelete = async () => {
+    deleteMutation({
+      variables: {
+        id: item.id,
+      },
+    })
+    clickDelete()
+  }
+
+  const confirmModify = async () => {
+    modifyMutation({
+      variables: {
+        id: item.id,
+        text: modifyText,
+      },
+    })
+    alert("수정되었습니다.")
+    clickModify();
   }
 
   return (
@@ -46,8 +111,14 @@ export default function GuestBookItem({ item, refetch }: Props) {
         </div>
         <p className="overflow-y-auto text-gray-600">{item.text}</p>
       </div>
-      {isModify && <ModifyGuestBook setIsModify={setIsModify} id={item.id} />}
-      {isDelete && <DeleteGuestBook setIsDelete={setIsDelete} id={item.id} refetch={refetch} />}
+      {isModify && <ModifyModal value={modifyText} setFunction={setModifyText} clickClose={clickModify} clickConfirm={confirmModify} message="방명록" />}
+      {isDelete && (
+        <DeleteModal
+          clickClose={clickDelete}
+          clickConfirm={confirmDelete}
+          message="방명록"
+        />
+      )}
     </div>
   )
 }

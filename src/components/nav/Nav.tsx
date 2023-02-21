@@ -29,7 +29,7 @@ export default function Nav() {
     setLoginModal(true)
   }
 
-  const [currentUser, { data, refetch }] = useLazyQuery(CURRENTUSER, {
+  const [currentUser, { data, refetch, error }] = useLazyQuery(CURRENTUSER, {
     fetchPolicy: 'network-only',
     context : {
       headers : {
@@ -39,17 +39,22 @@ export default function Nav() {
   })
 
   useEffect(() => {
-    if (isLoginModal || isSignupModal) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
+    if(localStorage.getItem('token')){
+      if(error){
+        localStorage.removeItem('token')
+        setCurrentUser({
+          __typename: '',
+          nickname: '',
+          email: '',
+          role: '',
+        })
+      }
+      setCurrentUser(data?.currentUser)
+      refetch()
     }
-  }, [isLoginModal, isSignupModal])
-
-  useEffect(() => {
-    setCurrentUser(data?.currentUser)
-    refetch()
-  }, [data])
+    
+      
+  }, [data, error])
 
 
   const clickProfile = () => {
@@ -78,7 +83,7 @@ export default function Nav() {
 
   return (
     <div>
-      <div className="fixed z-10 flex h-16 w-full items-center justify-between border-b bg-origin px-5 shadow-md">
+      <div className="fixed z-20 flex h-16 w-full items-center justify-between border-b bg-origin px-5 shadow-md">
         <Link to="/" className="text-2xl font-normal text-gray-300">
           성수의 블로그
         </Link>

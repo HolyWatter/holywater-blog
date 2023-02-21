@@ -4,14 +4,13 @@ import {
   OperationVariables,
   useMutation,
 } from '@apollo/client'
-import { cp } from 'fs'
 import { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { loginState } from '../../../common/Atom'
 import { PostingType } from '../../../common/interface'
 import SwiperComponents from '../../SwiperComponent'
-import DeleteAndModifyBtn from '../DeleteAndModifyBtn'
 import PostingComments from './PostingComments'
+import PostingModal from './PostingModal'
 
 interface Props {
   posting: PostingType
@@ -31,6 +30,7 @@ const ADDCOMMENT = gql`
 
 export default function Posting({ posting, refetch }: Props) {
   const [comment, setComment] = useState('')
+  const [isModal, setIsModal] = useState<boolean>(false)
   const currentUser = useRecoilValue(loginState)
   const date = new Date(posting.created)
   const timeFormat = new Intl.DateTimeFormat('KR', {
@@ -60,13 +60,32 @@ export default function Posting({ posting, refetch }: Props) {
     refetch()
   }
 
+  const clickModalBtn = () => {
+    setIsModal((prev) => !prev)
+  }
+
   return (
     <div className="my-5 max-w-[450px] rounded-md border">
       <div className="flex flex-col justify-center space-y-3 py-2 pl-3">
         <div className="flex justify-between pt-1 pr-2">
           <p>{posting.author.nickname}</p>
           {posting.author.nickname === currentUser?.nickname && (
-            <DeleteAndModifyBtn clickModify={()=>{}} clickDelete={()=>{}}/>
+            <button onClick={clickModalBtn} className="pr-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="h-6 w-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+                />
+              </svg>
+            </button>
           )}
         </div>
         <p className="text-xs text-gray-500">{timeFormat}</p>
@@ -93,7 +112,11 @@ export default function Posting({ posting, refetch }: Props) {
       <div className="border-b" />
       <div className="flex flex-col py-3 pl-3">
         {posting.comments.map((comment) => (
-          <PostingComments key={comment.id} comment={comment}/>
+          <PostingComments
+            key={comment.id}
+            comment={comment}
+            refetch={refetch}
+          />
         ))}
       </div>
       <form className="flex w-full" onSubmit={submitComment}>
@@ -107,6 +130,7 @@ export default function Posting({ posting, refetch }: Props) {
           입력
         </button>
       </form>
+      {isModal && <PostingModal clickClose={clickModalBtn}/>}
     </div>
   )
 }
