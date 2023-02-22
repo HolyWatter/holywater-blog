@@ -41,20 +41,8 @@ export default function PostingComments({ comment, refetch }: Props) {
   const [isModifyComment, setIsModifyComment] = useState<boolean>(false)
   const [modifyText, setModifyText] = useState<string>("")
 
-  const [deleteMutation] = useMutation(DELETE, {
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('token'),
-      },
-    },
-  })
-  const [modifyMutation] = useMutation(Modify, {
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('token'),
-      },
-    },
-  })
+  const [deleteMutation] = useMutation(DELETE)
+  const [modifyMutation] = useMutation(Modify)
 
   const clickDelete = () => {
     setIsDeleteComment((prev) => !prev)

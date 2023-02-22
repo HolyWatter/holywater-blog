@@ -41,6 +41,7 @@ export default function Login({ currentUser }: Props) {
   })
   const [login, { error, data }] = useMutation(LOGIN)
 
+  console.log(data)
   useEffect(() => {
     if (error) {
       alert(error.message)
@@ -50,11 +51,6 @@ export default function Login({ currentUser }: Props) {
       alert(data.login.message)
       setLoginModal((prev) => !prev)
       currentUser({
-        context: {
-          headers: {
-            Authorization: localStorage.getItem('token'),
-          },
-        },
         fetchPolicy: 'network-only',
       })
     }

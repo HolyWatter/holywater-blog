@@ -40,13 +40,7 @@ export default function Posting({ posting, refetch }: Props) {
   const inputComment = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value)
   }
-  const [addComment] = useMutation(ADDCOMMENT, {
-    context: {
-      headers: {
-        Authorization: localStorage.getItem('token'),
-      },
-    },
-  })
+  const [addComment] = useMutation(ADDCOMMENT)
 
   const submitComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -65,7 +59,7 @@ export default function Posting({ posting, refetch }: Props) {
   }
 
   return (
-    <div className="my-5 max-w-[450px] rounded-md border">
+    <div className="my-5 max-w-[450px] rounded-md border min-w-[450px]">
       <div className="flex flex-col justify-center space-y-3 py-2 pl-3">
         <div className="flex justify-between pt-1 pr-2">
           <p>{posting.author.nickname}</p>
