@@ -25,37 +25,20 @@ export default function Nav() {
   const current = useRecoilValue(loginState)
   const setCurrentUser = useSetRecoilState(loginState)
   const setLoginModal = useSetRecoilState(loginModal)
+
   const clickLogin = () => {
     setLoginModal(true)
   }
 
-  const [currentUser, { data, refetch, error }] = useLazyQuery(CURRENTUSER, {
+  const [currentUser, { data, error }] = useLazyQuery(CURRENTUSER, {
     fetchPolicy: 'network-only',
-    context : {
-      headers : {
-        Authorization : localStorage.getItem('token')
-      }
-    }
   })
 
   useEffect(() => {
     if(localStorage.getItem('token')){
-      if(error){
-        localStorage.removeItem('token')
-        setCurrentUser({
-          __typename: '',
-          nickname: '',
-          email: '',
-          role: '',
-        })
-      }
       setCurrentUser(data?.currentUser)
-      refetch()
     }
-    
-      
   }, [data, error])
-
 
   const clickProfile = () => {
     setIsMenu((prev) => !prev)
@@ -64,14 +47,6 @@ export default function Nav() {
   const logout = async () => {
     localStorage.removeItem('token')
     alert('로그아웃되었습니다.')
-    await currentUser({
-      context: {
-        headers: {
-          Authorization: localStorage.getItem('token'),
-        },
-      },
-      fetchPolicy: 'network-only',
-    })
     setCurrentUser({
       __typename: '',
       nickname: '',
